@@ -2,7 +2,7 @@ from random import randint
 import time
 
 from things import Item, Knapsack
-from algorithms import dumb
+from algorithms import brute_force, recursive
 
 
 def random_init():
@@ -34,10 +34,17 @@ def main():
     knapsack, item_list = predefined_init()
 
     start = time.time()
-    best_value, best_tuple = dumb(knapsack, item_list)
+    best_value, best_tuple = brute_force(knapsack, item_list)
     end = time.time()
 
     print(f"Algoritmo lento e ruim executado em {end - start} segundos")
+    print(f"Solução: {best_value}, {best_tuple}")
+
+    start = time.time()
+    best_value, best_tuple = recursive(knapsack, item_list, len(item_list))
+    end = time.time()
+
+    print(f"Algoritmo recursivo executado em {end - start} segundos")
     print(f"Solução: {best_value}, {best_tuple}")
 
 
