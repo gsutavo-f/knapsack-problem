@@ -29,24 +29,22 @@ def brute_force(knapsack: Knapsack, item_list: list[Item]):
     return bestValue, bestTuple
 
 
-def recursive(knapsack: Knapsack, item_list: list[Item], n: int) -> int:
+def recursive(curr_capacity: int, item_list: list[Item], n: int) -> int:
     if n == 0:
         return 0
-    elif item_list[n - 1].get_weight() > (
-        knapsack.current_capacity - knapsack.max_capacity
-    ):
-        return recursive(knapsack, item_list, n - 1)
+    elif item_list[n - 1].get_weight() > curr_capacity:
+        return recursive(curr_capacity, item_list, n - 1)
     else:
         return max(
             [
-                # listOfValues[n - 1]
-                knapsack.insert_item(item_list[n - 1])
+                item_list[n - 1].get_value()
                 + recursive(
                     # listOfValues, listOfWeights, capacity - listOfWeights[n - 1], n - 1
-                    knapsack,
+                    curr_capacity - item_list[n - 1].get_weight(),
                     item_list,
                     n - 1,
                 ),
-                recursive(knapsack, item_list, n - 1),
+                recursive(curr_capacity, item_list, n - 1),
             ]
         )
+    
