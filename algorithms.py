@@ -1,8 +1,4 @@
 from itertools import combinations
-import collections.abc
-import functools
-
-import numpy as np
 
 from things import Item, Knapsack
 
@@ -49,9 +45,10 @@ def recursive(curr_capacity: int, item_list: list[Item], n: int) -> int:
                 recursive(curr_capacity, item_list, n - 1),
             ]
         )
-    
+
+
 def dynnamic_programming(max_capacity: int, item_list: list[Item], n: int):
-    K = [[0 for i in range(0,max_capacity + 1)] for i in range(0,n + 1)]
+    K = [[0 for i in range(0, max_capacity + 1)] for i in range(0, n + 1)]
 
     for i in range(n + 1):
         for cap in range(max_capacity + 1):
@@ -65,15 +62,15 @@ def dynnamic_programming(max_capacity: int, item_list: list[Item], n: int):
                 )
             else:
                 K[i][cap] = K[i - 1][cap]
-                
+
     return K[n][max_capacity]
 
 
-def fptas(curr_capacity: int, item_list: list[Item], n: int, scaling_factor: int = 4) -> int:
+def fptas(curr_capacity: int, item_list: list[Item], n: int, epsilon: int = 20) -> int:
     weight_list = (item.get_weight() for item in item_list)
     max_value = max(weight_list)
-    
-    # scaling_factor = (max_value * epsilon) / n
+
+    scaling_factor = (max_value * epsilon) / n
     new_capacity = int(curr_capacity / scaling_factor)
     new_items_cost = []
     for item in item_list:

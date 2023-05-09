@@ -2,7 +2,7 @@ from random import randint
 import time
 
 from things import Item, Knapsack
-from algorithms import brute_force, recursive, fptas
+from algorithms import brute_force, recursive, dynnamic_programming, fptas
 
 FILE_PATH = "./probs"
 
@@ -12,7 +12,8 @@ def file_init(file_path):
         for line in file:
             parts = [int(value) for value in line.split()]
             n, max_capacity = parts[1:3]
-            item_list = [Item(parts[i], parts[i + 1]) for i in range(3, len(parts), 2)]
+            item_list = [Item(parts[i], parts[i + 1])
+                         for i in range(3, len(parts), 2)]
 
         knapsack = Knapsack(max_capacity)
 
@@ -20,13 +21,14 @@ def file_init(file_path):
 
 
 def random_init():
-    KS_max_cap = randint(50, 100)
-    item_amount = randint(1, 20)
+    KS_max_cap = randint(1000, 10000)
+    item_amount = 10000
     item_list = []
     knapsack = Knapsack(max_capacity=KS_max_cap)
 
     for i in range(0, item_amount):
-        item_list[i] = Item(weight=randint(1, KS_max_cap), value=randint(1, 201))
+        item_list.append(
+            Item(weight=randint(1, KS_max_cap), value=randint(1, 10001)))
 
     return knapsack, item_list
 
@@ -51,15 +53,17 @@ def predefined_init():
 
 
 def main():
-    # knapsack, item_list = random_init()
-    knapsack, item_list = file_init(f"{FILE_PATH}/4_473.txt")
+    knapsack, item_list = random_init()
+    # knapsack, item_list = file_init(f"{FILE_PATH}/40_4068.txt")
 
-    # start = time.time()
-    # best_value, best_tuple = brute_force(knapsack, item_list)
-    # end = time.time()
+    start = time.time()
+    best_value = dynnamic_programming(
+        knapsack.max_capacity, item_list, len(item_list))
+    end = time.time()
 
-    # print(f"Algoritmo lento e ruim executado em {end - start} segundos")
-    # print(f"Solução: {best_value}, {best_tuple}")
+    print(
+        f"Algoritmo de programação dinâmica executado em {end - start} segundos")
+    print(f"Solução: {best_value}")
 
     start = time.time()
     best_value = fptas(knapsack.max_capacity, item_list, len(item_list))
